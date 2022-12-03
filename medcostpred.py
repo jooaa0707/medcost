@@ -50,11 +50,7 @@ X_test3 = X_test.drop(['bmi','bmi_smoker2'],axis=1)
 y_test1 = y_test['charges']
 y_test2 = y_test['charges2']
 
-from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import LinearRegression, Ridge
-from sklearn.linear_model import TweedieRegressor
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import mean_squared_error, r2_score, f1_score, confusion_matrix
+from sklearn.linear_model import LinearRegression
 
 X_train_now = X_train1
 y_train_now = y_train1
