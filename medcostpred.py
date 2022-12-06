@@ -60,14 +60,15 @@ linear_regressor.fit(X_train_now,y_train_now)
 
 
 
-st.header("나의 정보를 입력하시고, 향후 의료비를 확인하세요!")
+st.header("Medical Cost predictor")
+st.subheader("나의 정보를 입력하고, 향후 필요한 의료비를 예측해보세요!!🚑")
 
 col1, col2 = st.columns([1, 2])
 
 with col1:
     sex = st.radio(
         "성별을 선택해주세요",
-        ('남자 ','여자'))
+        ('남자','여자'))
 
     text_input_2 = st.text_input(
     "나이를 입력해주세요(단위:세) 👇","40"
@@ -79,7 +80,7 @@ with col1:
     text_input_4 = st.text_input(
         "몸무게를 입력해주세요(단위:kg) 👇","55"
     )
-    if sex=="남자": 
+    if sex=='남자': 
         gender=1
     else:
         gender=0
@@ -101,8 +102,17 @@ with col1:
 
     bmi_smoker = bmi + smoker
 
+    children = st.selectbox(
+        '자녀의 수는 몇명입니까?',
+        ('0','1','2','3','4','5'))
+    child=int(children)
+
+
+
+with col2:
+
     st.subheader("당신의 미래 예상 의료비는???")
-    input_data = (age,gender,bmi,1,smoker,1,0,0,0)
+    input_data = (age,gender,bmi,child,smoker,1,0,0,0)
     input_data_np=np.array(input_data)
     input_data_reshape = input_data_np.reshape(1,-1)
 
@@ -110,7 +120,6 @@ with col1:
     #print(np.sqrt(mean_squared_error(y_test1, y_pred)), r2_score(y_test1, y_pred))
     st.write(round(y_pred[0],0),"USD 입니다.")
 
-with col2:
     st.subheader("1kg 감량시 의료비 절감액")
     weights2=int(text_input_4)-1
     bmi2=round(weights2/(heights**2),2)
@@ -119,7 +128,7 @@ with col2:
     else: bmi_over30_2=0
     bmi_smoker2 = bmi2 + smoker
 
-    input_data2 = (age,gender,bmi2,1,smoker,1,0,0,0)
+    input_data2 = (age,gender,bmi2,child,smoker,1,0,0,0)
     input_data_np2=np.array(input_data2)
     input_data_reshape2 = input_data_np2.reshape(1,-1)
 
@@ -130,7 +139,7 @@ with col2:
 
     st.subheader("금연시 의료비 절감액")
 
-    input_data3 = (age,gender,bmi2,1,0,1,0,0,0)
+    input_data3 = (age,gender,bmi,child,0,1,0,0,0)
     input_data_np3=np.array(input_data3)
     input_data_reshape3 = input_data_np3.reshape(1,-1)
 
@@ -138,4 +147,15 @@ with col2:
 
     #print(np.sqrt(mean_squared_error(y_test1, y_pred)), r2_score(y_test1, y_pred))
     st.write(round(y_pred[0]-y_pred3[0],0),"USD 입니다.")
+
+    st.subheader("자녀 1명 더 낳을시 추가로 준비할 의료비")
+    child2 = child + 1
+    input_data4 = (age,gender,bmi,child2,smoker,1,0,0,0)
+    input_data_np4=np.array(input_data4)
+    input_data_reshape4 = input_data_np4.reshape(1,-1)
+
+    y_pred4 = linear_regressor.predict(input_data_reshape4)
+
+    #print(np.sqrt(mean_squared_error(y_test1, y_pred)), r2_score(y_test1, y_pred))
+    st.write(round(y_pred4[0]-y_pred[0],0),"USD 입니다.")
 
